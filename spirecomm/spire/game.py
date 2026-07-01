@@ -54,6 +54,7 @@ class Game:
         self.screen = None
         self.screen_up = False
         self.screen_type = None
+        self.screen_name = None
         self.room_phase = None
         self.room_type = None
         self.choice_list = []
@@ -88,10 +89,25 @@ class Game:
         # Screen State
 
         game.screen_up = json_state.get("is_screen_up", False)
-        game.screen_type = spirecomm.spire.screen.ScreenType[json_state.get("screen_type")]
-        game.screen = spirecomm.spire.screen.screen_from_json(game.screen_type, json_state.get("screen_state"))
+        raw_screen_type = json_state.get("screen_type")
+        raw_screen_state = json_state.get("screen_state")
+        room_type = json_state.get("room_type")
+        if (
+            raw_screen_type == "EVENT"
+            and room_type == "NeowRoom"
+            and isinstance(raw_screen_state, dict)
+            and raw_screen_state.get("cards")
+        ):
+            # Communication Mod can surface Neow's remove/transform/upgrade
+            # overlays as EVENT screens even though the payload already uses
+            # the grid-select schema. Promote those states to GRID so higher
+            # layers can translate CARD_SELECT actions correctly.
+            raw_screen_type = "GRID"
+        game.screen_type = spirecomm.spire.screen.ScreenType[raw_screen_type]
+        game.screen_name = json_state.get("screen_name")
+        game.screen = spirecomm.spire.screen.screen_from_json(game.screen_type, raw_screen_state)
         game.room_phase = RoomPhase[json_state.get("room_phase")]
-        game.room_type = json_state.get("room_type")
+        game.room_type = room_type
         game.choice_available = "choice_list" in json_state
         if game.choice_available:
             game.choice_list = json_state.get("choice_list")

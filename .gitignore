@@ -124,3 +124,44 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+# Local project artifacts
+data/
+models/
+_cache/
+archive/
+sendToDevs/
+orchestration/
+V5_ITERATION_LOG.md
+WORKSPACE_MEMORY.md
+
+# Local editor/agent state
+.codex/
+.vscode/
+
+# Local runtime configuration
+info.displayconfig
+twitchconfig.txt
+steam_appid.txt
+preferences/
+
+# Large binary/model/archive artifacts
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.pkl
+*.npz
+*.npy
+*.zip
+*.tar
+*.tar.gz
+*.tar.zst
+*.zst
+*.bak
+*.log
+*.log.*
+
+# Third-party/proprietary reference material; keep local only.
+spirecomm/native_sim_v3/reference/

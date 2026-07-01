@@ -1,0 +1,265 @@
+{
+  "branch_label_dir": "data/noncombat_hard_v1/v5_216_nosearch_seed1_240/branch_labels_card_upgrade_h6",
+  "clamp": 0.3,
+  "final_count": 55,
+  "learned": [
+    {
+      "card": "dualwield",
+      "count": 27,
+      "learned_bias": -0.0571,
+      "mean_delta_floor_units": -0.36347901386179804,
+      "shrink": 0.627906976744186
+    },
+    {
+      "card": "juggernaut",
+      "count": 15,
+      "learned_bias": -0.048,
+      "mean_delta_floor_units": -0.3971423063532487,
+      "shrink": 0.4838709677419355
+    },
+    {
+      "card": "corruption",
+      "count": 16,
+      "learned_bias": -0.0434,
+      "mean_delta_floor_units": -0.3475330300146379,
+      "shrink": 0.5
+    },
+    {
+      "card": "burningpact",
+      "count": 29,
+      "learned_bias": -0.0381,
+      "mean_delta_floor_units": -0.2363564841998504,
+      "shrink": 0.6444444444444445
+    },
+    {
+      "card": "immolate",
+      "count": 19,
+      "learned_bias": 0.0337,
+      "mean_delta_floor_units": 0.24867932836576132,
+      "shrink": 0.5428571428571428
+    },
+    {
+      "card": "darkembrace",
+      "count": 31,
+      "learned_bias": -0.0334,
+      "mean_delta_floor_units": -0.2023883273923524,
+      "shrink": 0.6595744680851063
+    },
+    {
+      "card": "secondwind",
+      "count": 46,
+      "learned_bias": 0.0307,
+      "mean_delta_floor_units": 0.16528328223567737,
+      "shrink": 0.7419354838709677
+    },
+    {
+      "card": "seeingred",
+      "count": 35,
+      "learned_bias": 0.0289,
+      "mean_delta_floor_units": 0.16838040796788284,
+      "shrink": 0.6862745098039216
+    },
+    {
+      "card": "rage",
+      "count": 38,
+      "learned_bias": 0.0258,
+      "mean_delta_floor_units": 0.14684667787276043,
+      "shrink": 0.7037037037037037
+    },
+    {
+      "card": "truegrit",
+      "count": 83,
+      "learned_bias": -0.0251,
+      "mean_delta_floor_units": -0.11967102637910822,
+      "shrink": 0.8383838383838383
+    },
+    {
+      "card": "pummel",
+      "count": 42,
+      "learned_bias": 0.023,
+      "mean_delta_floor_units": 0.1269493395278745,
+      "shrink": 0.7241379310344828
+    },
+    {
+      "card": "twinstrike",
+      "count": 111,
+      "learned_bias": 0.0221,
+      "mean_delta_floor_units": 0.10113518823064863,
+      "shrink": 0.8740157480314961
+    },
+    {
+      "card": "brutality",
+      "count": 22,
+      "learned_bias": -0.0219,
+      "mean_delta_floor_units": -0.15097470960002926,
+      "shrink": 0.5789473684210527
+    },
+    {
+      "card": "seversoul",
+      "count": 22,
+      "learned_bias": -0.0218,
+      "mean_delta_floor_units": -0.15059893797364776,
+      "shrink": 0.5789473684210527
+    },
+    {
+      "card": "shockwave",
+      "count": 29,
+      "learned_bias": 0.0216,
+      "mean_delta_floor_units": 0.13419353614785956,
+      "shrink": 0.6444444444444445
+    },
+    {
+      "card": "sentinel",
+      "count": 27,
+      "learned_bias": 0.0194,
+      "mean_delta_floor_units": 0.12350840495238938,
+      "shrink": 0.627906976744186
+    },
+    {
+      "card": "evolve",
+      "count": 36,
+      "learned_bias": 0.0188,
+      "mean_delta_floor_units": 0.10843451936349727,
+      "shrink": 0.6923076923076923
+    },
+    {
+      "card": "bloodforblood",
+      "count": 28,
+      "learned_bias": 0.0187,
+      "mean_delta_floor_units": 0.11761218044871304,
+      "shrink": 0.6363636363636364
+    },
+    {
+      "card": "headbutt",
+      "count": 105,
+      "learned_bias": 0.0183,
+      "mean_delta_floor_units": 0.0844804677161961,
+      "shrink": 0.8677685950413223
+    },
+    {
+      "card": "bludgeon",
+      "count": 17,
+      "learned_bias": -0.0175,
+      "mean_delta_floor_units": -0.1361463915133294,
+      "shrink": 0.5151515151515151
+    },
+    {
+      "card": "spotweakness",
+      "count": 14,
+      "learned_bias": 0.0167,
+      "mean_delta_floor_units": 0.14329504891074035,
+      "shrink": 0.4666666666666667
+    },
+    {
+      "card": "offering",
+      "count": 12,
+      "learned_bias": 0.016,
+      "mean_delta_floor_units": 0.14902521461170673,
+      "shrink": 0.42857142857142855
+    },
+    {
+      "card": "fiendfire",
+      "count": 36,
+      "learned_bias": 0.0153,
+      "mean_delta_floor_units": 0.08858156595229774,
+      "shrink": 0.6923076923076923
+    },
+    {
+      "card": "searingblow",
+      "count": 22,
+      "learned_bias": -0.0151,
+      "mean_delta_floor_units": -0.10428850328881593,
+      "shrink": 0.5789473684210527
+    },
+    {
+      "card": "anger",
+      "count": 81,
+      "learned_bias": 0.0143,
+      "mean_delta_floor_units": 0.06855660602174761,
+      "shrink": 0.8350515463917526
+    },
+    {
+      "card": "demonform",
+      "count": 15,
+      "learned_bias": 0.0136,
+      "mean_delta_floor_units": 0.11217552486345297,
+      "shrink": 0.4838709677419355
+    },
+    {
+      "card": "shrugitoff",
+      "count": 99,
+      "learned_bias": 0.0132,
+      "mean_delta_floor_units": 0.06143914763643089,
+      "shrink": 0.8608695652173913
+    },
+    {
+      "card": "feed",
+      "count": 20,
+      "learned_bias": -0.0121,
+      "mean_delta_floor_units": -0.08692568961606525,
+      "shrink": 0.5555555555555556
+    },
+    {
+      "card": "infernalblade",
+      "count": 39,
+      "learned_bias": -0.0121,
+      "mean_delta_floor_units": -0.06847831027314721,
+      "shrink": 0.7090909090909091
+    },
+    {
+      "card": "swordboomerang",
+      "count": 147,
+      "learned_bias": -0.0119,
+      "mean_delta_floor_units": -0.052746801630005356,
+      "shrink": 0.901840490797546
+    },
+    {
+      "card": "clothesline",
+      "count": 95,
+      "learned_bias": -0.0116,
+      "mean_delta_floor_units": -0.05434534491070505,
+      "shrink": 0.8558558558558559
+    },
+    {
+      "card": "battletrance",
+      "count": 29,
+      "learned_bias": 0.0114,
+      "mean_delta_floor_units": 0.07048065751637751,
+      "shrink": 0.6444444444444445
+    },
+    {
+      "card": "berserk",
+      "count": 14,
+      "learned_bias": 0.0111,
+      "mean_delta_floor_units": 0.0954712799101646,
+      "shrink": 0.4666666666666667
+    },
+    {
+      "card": "perfectedstrike",
+      "count": 82,
+      "learned_bias": -0.0107,
+      "mean_delta_floor_units": -0.05110660531654147,
+      "shrink": 0.8367346938775511
+    },
+    {
+      "card": "carnage",
+      "count": 32,
+      "learned_bias": 0.0104,
+      "mean_delta_floor_units": 0.062289998151267914,
+      "shrink": 0.6666666666666666
+    },
+    {
+      "card": "powerthrough",
+      "count": 40,
+      "learned_bias": 0.0103,
+      "mean_delta_floor_units": 0.05760754060978525,
+      "shrink": 0.7142857142857143
+    }
+  ],
+  "learned_count": 36,
+  "min_count": 6,
+  "root_count": 1124,
+  "scale": 0.25,
+  "score_unit": 100.0,
+  "shrink_k": 16.0
+}

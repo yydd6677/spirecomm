@@ -1,4 +1,9 @@
+import time
+
 from spirecomm.spire.screen import ScreenType, RewardType
+
+
+NEOW_REWARD_SETTLE_TIMEOUT_TICKS = 200
 
 
 class Action:
@@ -29,6 +34,71 @@ class Action:
         coordinator.send_message(self.command)
 
 
+class CommittedAction(Action):
+    """Represents an action that has already been executed during planning.
+
+    Execution becomes a no-op so the coordinator can continue from the committed
+    branch state without sending the same game command twice.
+    """
+
+    def __init__(self, original_action):
+        super().__init__(getattr(original_action, "command", "state"), requires_game_ready=False)
+        self.original_action = original_action
+        for attribute in [
+            "card",
+            "card_index",
+            "target_monster",
+            "target_index",
+            "choice_index",
+            "name",
+            "potion",
+            "potion_index",
+            "use",
+            "combat_reward",
+        ]:
+            if hasattr(original_action, attribute):
+                setattr(self, attribute, getattr(original_action, attribute))
+
+    def execute(self, coordinator):
+        # The branch action has already been executed during planning. We still
+        # need a fresh state push so the main loop can continue from the new
+        # post-action screen (for example combat reward / map / game over).
+        coordinator.send_message("state")
+
+
+class RawCommandAction(Action):
+    """Send an arbitrary command string to Communication Mod."""
+
+    def __init__(self, command, requires_game_ready=True):
+        super().__init__(command, requires_game_ready=requires_game_ready)
+
+
+class StateAction(Action):
+    """Request an immediate state push from Communication Mod."""
+
+    def __init__(self):
+        super().__init__("state", requires_game_ready=False)
+
+
+class WaitAction(Action):
+    """Ask Communication Mod to wait for a number of update ticks."""
+
+    def __init__(self, timeout):
+        super().__init__("wait {}".format(int(timeout)), requires_game_ready=False)
+
+
+class ClickAction(Action):
+    """Click a fixed UI coordinate through Communication Mod."""
+
+    def __init__(self, button, x, y, timeout=100):
+        command = "click {} {} {} {}".format(button, float(x), float(y), int(timeout))
+        super().__init__(command, requires_game_ready=False)
+        self.button = button
+        self.x = float(x)
+        self.y = float(y)
+        self.timeout = int(timeout)
+
+
 class PlayCardAction(Action):
     """An action to play a specified card from your hand"""
 
@@ -38,6 +108,24 @@ class PlayCardAction(Action):
         self.card_index = card_index
         self.target_index = target_index
         self.target_monster = target_monster
+
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        if game_state is None or not game_state.play_available:
+            return False
+
+        if self.card is not None:
+            if self.card not in game_state.hand:
+                return False
+            card = self.card
+        else:
+            if self.card_index < 0 or self.card_index >= len(game_state.hand):
+                return False
+            card = game_state.hand[self.card_index]
+
+        return card.is_playable
 
     def execute(self, coordinator):
         if self.card is not None:
@@ -64,6 +152,12 @@ class PotionAction(Action):
         self.target_monster = target_monster
         self.target_index = target_index
 
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        return game_state is not None and game_state.potion_available
+
     def execute(self, coordinator):
         if self.potion is not None:
             self.potion_index = coordinator.last_game_state.potions.index(self.potion)
@@ -88,6 +182,19 @@ class EndTurnAction(Action):
     def __init__(self):
         super().__init__("end")
 
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        if game_state is None or not game_state.end_available:
+            return False
+        # Hard-disable ending the turn while any playable card remains.
+        if getattr(game_state, "in_combat", False):
+            hand = getattr(game_state, "hand", None) or []
+            if any(getattr(card, "is_playable", False) for card in hand):
+                return False
+        return True
+
 
 class ProceedAction(Action):
     """An action to use the CommunicationMod 'Proceed' command"""
@@ -95,12 +202,53 @@ class ProceedAction(Action):
     def __init__(self):
         super().__init__("proceed")
 
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        return game_state is not None and game_state.proceed_available
+
+
+class ConfirmAction(Action):
+    """An action to confirm a card/grid selection through Communication Mod."""
+
+    def __init__(self):
+        # Confirmation often needs to fire while Communication Mod is still
+        # marked non-ready from the preceding grid/hand select choose command.
+        super().__init__("confirm", requires_game_ready=False)
+
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        if game_state is None:
+            return False
+        if game_state.screen_type == ScreenType.HAND_SELECT:
+            return True
+        if game_state.screen_type == ScreenType.GRID:
+            screen = getattr(game_state, "screen", None)
+            return bool(
+                getattr(screen, "confirm_up", False)
+                or getattr(screen, "is_just_for_confirming", False)
+                or getattr(screen, "for_upgrade", False)
+                or getattr(screen, "for_transform", False)
+                or getattr(screen, "for_purge", False)
+                or getattr(screen, "any_number", False)
+            )
+        return False
+
 
 class CancelAction(Action):
     """An action to use the CommunicationMod 'Cancel' command"""
 
     def __init__(self):
         super().__init__("cancel")
+
+    def can_be_executed(self, coordinator):
+        if not super().can_be_executed(coordinator):
+            return False
+        game_state = coordinator.last_game_state
+        return game_state is not None and game_state.cancel_available
 
 
 class ChooseAction(Action):
@@ -116,6 +264,96 @@ class ChooseAction(Action):
             coordinator.send_message("{} {}".format(self.command, self.name))
         else:
             coordinator.send_message("{} {}".format(self.command, self.choice_index))
+
+
+class NeowCardSelectAction(ChooseAction):
+    """Choose a Neow card-selection card and force a fresh state push.
+
+    Communication Mod surfaces Neow's remove/transform UI as an EVENT screen
+    with cards, and the choose command does not always trigger an immediate
+    serialized state update on its own. Use the same settle pulse as the Neow
+    card reward bridge so replay waits out the event timer before requesting a
+    fresh state.
+    """
+
+    def __init__(self, choice_index=0, name=None):
+        super().__init__(choice_index=choice_index, name=name)
+
+    def execute(self, coordinator):
+        super().execute(coordinator)
+        # Neow upgrade/remove grids do not expose a stable follow-up command
+        # surface. Let replay detect the stale GRID frame and bridge it via the
+        # dedicated timeout/finalize path instead of enqueueing extra actions
+        # that keep the step alive without changing state.
+
+
+class NeowCardRewardAction(ChooseAction):
+    """Choose a Neow card reward.
+
+    Keep this action scoped to the visible reward pick. The trace contains
+    explicit follow-up Neow continue / map steps, and queueing them here can
+    send `choose` into a transient map frame before nodes are selectable.
+    """
+
+    def __init__(
+        self,
+        choice_index=0,
+        name=None,
+        continue_choice_index=None,
+        post_continue_choice_index=None,
+        bridge_delay_seconds=0.0,
+        continue_delay_seconds=0.0,
+    ):
+        super().__init__(choice_index=choice_index, name=name)
+        self.continue_choice_index = None if continue_choice_index is None else int(continue_choice_index)
+        self.post_continue_choice_index = (
+            None if post_continue_choice_index is None else int(post_continue_choice_index)
+        )
+        self.bridge_delay_seconds = max(0.0, float(bridge_delay_seconds))
+        self.continue_delay_seconds = max(0.0, float(continue_delay_seconds))
+
+    def execute(self, coordinator):
+        coordinator.send_message(f"{self.command} {int(self.choice_index)}")
+        if self.bridge_delay_seconds > 0.0:
+            time.sleep(self.bridge_delay_seconds)
+        coordinator.send_message(f"wait {NEOW_REWARD_SETTLE_TIMEOUT_TICKS}")
+        coordinator.send_message("state")
+        if self.continue_choice_index is not None:
+            if self.continue_delay_seconds > 0.0:
+                time.sleep(self.continue_delay_seconds)
+            coordinator.send_message(f"choose {self.continue_choice_index}")
+            coordinator.send_message("wait 1")
+            coordinator.send_message("state")
+        if self.post_continue_choice_index is not None:
+            coordinator.send_message(f"choose {self.post_continue_choice_index}")
+            coordinator.send_message("wait 1")
+            coordinator.send_message("state")
+
+
+class NeowContinueAction(Action):
+    """Advance a single-option Neow continue screen and request a fresh state.
+
+    This bridge is used after the replay has already yielded one natural pulse
+    to let Neow transitions advance. Keep the follow-up nudge small so we do
+    not regress earlier Neow frames that are already stable.
+    """
+
+    def __init__(self, post_continue_choice_index=None, include_settle_probe=True):
+        super().__init__("choose 0", requires_game_ready=False)
+        self.post_continue_choice_index = (
+            None if post_continue_choice_index is None else int(post_continue_choice_index)
+        )
+        self.include_settle_probe = bool(include_settle_probe)
+
+    def execute(self, coordinator):
+        coordinator.send_message("choose 0")
+        if self.include_settle_probe:
+            coordinator.send_message("wait 1")
+            coordinator.send_message("state")
+        if self.post_continue_choice_index is not None:
+            coordinator.send_message(f"choose {self.post_continue_choice_index}")
+            coordinator.send_message("wait 1")
+            coordinator.send_message("state")
 
 
 class ChooseShopkeeperAction(ChooseAction):
@@ -146,8 +384,10 @@ class BuyPotionAction(ChooseAction):
         super().__init__(name=potion.name)
 
     def execute(self, coordinator):
-        if coordinator.game.are_potions_full():
-            raise Exception("Cannot buy potion because potion slots are full.")
+        game_state = getattr(coordinator, "last_game_state", None)
+        if game_state is not None and game_state.are_potions_full():
+            coordinator.send_message("state")
+            return
         super().execute(coordinator)
 
 
@@ -230,14 +470,21 @@ class OptionalCardSelectConfirmAction(Action):
     """An action to click confirm on a hand or grid select screen, only if available"""
 
     def __init__(self):
-        super().__init__()
+        # Grid/hand-select follow-up bridges often run while Communication Mod
+        # is still in a non-ready transition frame right after the initial
+        # choose command. Keep this wrapper itself non-ready so it can decide
+        # whether to enqueue a real confirm or just request fresh state.
+        super().__init__(requires_game_ready=False)
 
     def execute(self, coordinator):
         screen_type = coordinator.last_game_state.screen_type
         if screen_type == ScreenType.HAND_SELECT:
-            coordinator.add_action_to_queue(ProceedAction())
-        elif screen_type == ScreenType.GRID and coordinator.last_game_state.screen.confirm_up:
-            coordinator.add_action_to_queue(ProceedAction())
+            coordinator.add_action_to_queue(ConfirmAction())
+        elif screen_type == ScreenType.GRID:
+            # Communication Mod does not need an explicit confirm on Neow/grid
+            # selects. Let the caller's queued settle wait/state drive the next
+            # transition instead of injecting another bridge action here.
+            return
         else:
             coordinator.add_action_to_queue(StateAction())
 
@@ -326,4 +573,3 @@ class StateAction(Action):
 
     def __init__(self, requires_game_ready=False):
         super().__init__(command="state", requires_game_ready=False)
-

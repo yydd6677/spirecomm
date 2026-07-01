@@ -429,7 +429,6 @@ class SilentPriority(Priority):
     BOSS_RELIC_PRIORITY_LIST = [
         "Sozu",
         "Philosopher's Stone",
-        "Runic Dome",
         "Cursed Key",
         "Fusion Hammer",
         "Ectoplasm",
@@ -452,6 +451,7 @@ class SilentPriority(Priority):
         "HoveringKite",
         "White Beast Statue",
         "Calling Bell",
+        "Runic Dome",
     ]
 
 
@@ -787,7 +787,6 @@ class IroncladPriority(Priority):
         "Sozu",
         "Snecko Eye",
         "Philosopher's Stone",
-        "Runic Dome",
         "Cursed Key",
         "Fusion Hammer",
         "Velvet Choker",
@@ -808,6 +807,7 @@ class IroncladPriority(Priority):
         "Pandora's Box",
         "White Beast Statue",
         "Calling Bell",
+        "Runic Dome",
     ]
 
 
@@ -1020,7 +1020,6 @@ class DefectPowerPriority(Priority):
         "Snecko Eye",
         "Philosopher's Stone",
         "Nuclear Battery",
-        "Runic Dome",
         "Cursed Key",
         "Fusion Hammer",
         "Velvet Choker",
@@ -1040,6 +1039,7 @@ class DefectPowerPriority(Priority):
         "White Beast Statue",
         "Calling Bell",
         "FrozenCore",
+        "Runic Dome",
     ]
 
     PLAY_PRIORITY_LIST = [
