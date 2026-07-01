@@ -18,7 +18,7 @@ class RunRecordedReplaySessionTest(unittest.TestCase):
         with patch.dict(os.environ, env, clear=False):
             os.environ.pop("SPIRECOMM_BOOTSTRAP_READY_SENT", None)
             with patch("sys.stdout", stdout):
-                module = importlib.import_module("run_recorded_replay_session")
+                module = importlib.import_module("scripts.native.run_recorded_replay_session")
                 module._bootstrap_ready_if_needed()
             self.assertEqual(os.environ.get("SPIRECOMM_BOOTSTRAP_READY_SENT"), "1")
 
@@ -35,13 +35,13 @@ class RunRecordedReplaySessionTest(unittest.TestCase):
             clear=False,
         ):
             with patch("sys.stdout", stdout):
-                module = importlib.import_module("run_recorded_replay_session")
+                module = importlib.import_module("scripts.native.run_recorded_replay_session")
                 module._bootstrap_ready_if_needed()
 
         self.assertEqual(stdout.getvalue(), "")
 
     def test_main_dispatches_strict_replay_by_default(self):
-        module = importlib.import_module("run_recorded_replay_session")
+        module = importlib.import_module("scripts.native.run_recorded_replay_session")
         with patch.dict(
             os.environ,
             {
@@ -60,7 +60,7 @@ class RunRecordedReplaySessionTest(unittest.TestCase):
         self.assertEqual(strict_replay.call_args.kwargs["raw_state_log_path"], Path("/tmp/fake_report.raw_state_log.jsonl"))
 
     def test_main_clears_stale_replay_artifacts_before_start(self):
-        module = importlib.import_module("run_recorded_replay_session")
+        module = importlib.import_module("scripts.native.run_recorded_replay_session")
         with tempfile.TemporaryDirectory() as tmpdir:
             report_path = Path(tmpdir) / "fake_report.json"
             stale_paths = [

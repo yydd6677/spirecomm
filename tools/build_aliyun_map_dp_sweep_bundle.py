@@ -12,9 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = Path("/home/yydd/下载/aliyun_map_dp_sweep_v4")
 
 TOP_LEVEL_FILES = (
-    "evaluate_v3_rollout_batch.py",
-    "run_map_dp_sweep.py",
-    "run_shared_prefix_sweep.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_map_dp_sweep.py",
+    "scripts/v3_combat/run_shared_prefix_sweep.py",
     "setup.py",
     "README.md",
     "LICENSE",
@@ -107,7 +107,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 '''
 
 
@@ -125,7 +125,7 @@ COMBAT_DEVICE="${COMBAT_DEVICE:-cpu}"
 mkdir -p "$ROOT/logs" "$ROOT/map_sweep_runs" "$OUT_DIR"
 
 CMD=(
-  "$PY" -u "$ROOT/run_map_dp_sweep.py"
+  "$PY" -u "$ROOT/scripts/v3_combat/run_map_dp_sweep.py"
   --output-dir "$OUT_DIR"
   --seed-start 1
   --workers "$WORKERS"
@@ -197,7 +197,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
 OUT_DIR="${TMPDIR:-/tmp}/map_dp_sweep_smoke_$$"
 rm -rf "$OUT_DIR"
-"$PY" -u "$ROOT/run_map_dp_sweep.py" \
+"$PY" -u "$ROOT/scripts/v3_combat/run_map_dp_sweep.py" \
   --output-dir "$OUT_DIR" \
   --seed-start 1 \
   --workers "${WORKERS:-1}" \
@@ -228,7 +228,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${OUT_DIR:-$ROOT/map_sweep_runs/v5_104_map_dp_sweep_v4}"
 LOG_PATH="${LOG_PATH:-$ROOT/logs/v5_104_map_dp_sweep_v4.log}"
 echo "== process =="
-pgrep -af 'run_map_dp_sweep.py.*v5_104_map_dp_sweep_v4' || true
+pgrep -af 'scripts/v3_combat/run_map_dp_sweep.py.*v5_104_map_dp_sweep_v4' || true
 echo
 echo "== latest log =="
 tail -100 "$LOG_PATH" 2>/dev/null || true
@@ -255,7 +255,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PID_PATH="$ROOT/logs/v5_104_map_dp_sweep_v4.pid"
 if [[ ! -f "$PID_PATH" ]]; then
   echo "no pid file: $PID_PATH"
-  pgrep -af 'run_map_dp_sweep.py.*v5_104_map_dp_sweep_v4' || true
+  pgrep -af 'scripts/v3_combat/run_map_dp_sweep.py.*v5_104_map_dp_sweep_v4' || true
   exit 0
 fi
 pid="$(cat "$PID_PATH")"
@@ -277,9 +277,9 @@ from pathlib import Path
 import torch
 
 required = [
-    "evaluate_v3_rollout_batch.py",
-    "run_map_dp_sweep.py",
-    "run_shared_prefix_sweep.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_map_dp_sweep.py",
+    "scripts/v3_combat/run_shared_prefix_sweep.py",
     "spirecomm/ai/runtime_decision.py",
     "spirecomm/native_sim_v3/reference/decompiled_sts/com/megacrit/cardcrawl/characters/Ironclad.java",
     "models/v3_combat_transformer_v5_18_epoch003_rollout_best.pt",

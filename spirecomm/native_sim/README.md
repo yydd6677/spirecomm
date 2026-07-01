@@ -52,7 +52,7 @@ Current implemented slice:
 - Spirecomm-compatible combat state serialization.
 - Legal action generation for playable cards, potions, and hard-disabled end
   turn while any card is playable.
-- Optional approximate Neow reward phase (`run_native_run.py --neow`).
+- Optional approximate Neow reward phase (`scripts/native/run_native_run.py --neow`).
 - Run-level state machine for combat reward, map, campfire, shop, event, and
   chest phases, plus boss relic rewards after Act 1/2 bosses.
 - Expanded relic/potion subsystem with rarity-weighted potion/relic rolls, shop
@@ -78,7 +78,7 @@ Current implemented slice:
   related Ironclad/shop relics.
 - Existing spirecomm models can drive combat, card reward, map, campfire, shop,
   event, boss relic, potion, upgrade target, and purge target choices through
-  `/home/yydd/spirecomm/run_native_run.py`.
+  `/home/yydd/spirecomm/scripts/native/run_native_run.py`.
 - Randomness now uses a Python port of `sts_lightspeed`'s `sts::Random`, with
   separate run-level streams for Neow, treasure, event, relic, potion, card,
   merchant, monster, shuffle, misc, math-util, and map generation. This is the

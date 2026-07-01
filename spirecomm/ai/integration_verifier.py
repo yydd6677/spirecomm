@@ -6,7 +6,7 @@ from pathlib import Path
 from random import Random
 from typing import Any
 
-from compare_native_to_lightspeed_run import (
+from scripts.native.compare_native_to_lightspeed_run import (
     _attach_failure_metadata,
     _battle_signature,
     _choice_list_signature,
@@ -54,7 +54,7 @@ def _ensure_lightspeed_import(lightspeed_build: Path | None = None):
         raise ModuleNotFoundError(
             "slaythespire is required for lightspeed-backed model integration checks. "
             "Install the lightspeed Python package/build, or use native-only entrypoints "
-            "such as run_native_run.py, run_native_sim.py, or export_model_run_checklist.py."
+            "such as scripts/native/run_native_run.py, scripts/native/run_native_sim.py, or scripts/native/export_model_run_checklist.py."
         ) from exc
 
     return sts

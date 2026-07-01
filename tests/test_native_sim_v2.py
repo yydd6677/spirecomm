@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 import slaythespire as sts
-from compare_native_to_lightspeed_run import (
+from scripts.native.compare_native_to_lightspeed_run import (
     _attach_failure_metadata,
     _choice_list_signature,
     _pick_action_by_signature,

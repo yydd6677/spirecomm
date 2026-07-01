@@ -174,8 +174,8 @@ phase whitelist starts narrow
 
 Recommended next concrete work:
 
-1. Create `analyze_run_value_dataset.py` for lower-bound, phase/floor/source/seed balance, and before-vs-after diagnostics.
-2. Extend `train_run_value_model.py` cache to support `state_after` samples and `sample_kind`.
+1. Create `scripts/run_value/analyze_run_value_dataset.py` for lower-bound, phase/floor/source/seed balance, and before-vs-after diagnostics.
+2. Extend `scripts/run_value/train_run_value_model.py` cache to support `state_after` samples and `sample_kind`.
 3. Add phase/floor/source row weighting or a balanced sampler.
 4. Re-train the residual scalar model on the new view and compare against `6.7792`.
 5. Add quantile/calibration heads only after the scalar training view is stable.

@@ -26,10 +26,10 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_PY = (
-    "evaluate_v3_rollout_batch.py",
-    "run_v3_teacher_config_sweep.py",
-    "run_v3_teacher_config_sweep_fast.py",
-    "watch_teacher_sweep_progress.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep_fast.py",
+    "scripts/v3_combat/watch_teacher_sweep_progress.py",
     "setup.py",
 )
 
@@ -129,7 +129,7 @@ mkdir -p "$ROOT/logs" "$ROOT/teacher_sweep_runs"
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{SEARCH_BUDGET_RANGES}'
 export SPIRECOMM_TEACHER_SWEEP_ROUND1_GRID_JSON='{SEARCH_BUDGET_GRID}'
 
-exec "$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+exec "$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
   --output-dir "$OUT_DIR" \\
   --seed-start 1 --workers "$WORKERS" --torch-threads 1 --blas-threads 1 \\
   --metrics-mode floor --summary-interval 0 --progress-interval-tasks 25 \\
@@ -169,7 +169,7 @@ def status_script() -> str:
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "== process =="
-pgrep -af 'run_v3_teacher_config_sweep_fast.py.*v3_teacher_beam_node_budget_sweep_v1' || true
+pgrep -af 'scripts/v3_combat/run_v3_teacher_config_sweep_fast.py.*v3_teacher_beam_node_budget_sweep_v1' || true
 echo
 echo "== latest log =="
 if [[ -f "$ROOT/logs/search_budget_beam_node.log" ]]; then
@@ -192,7 +192,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 """
 
 
@@ -208,7 +208,7 @@ mkdir -p "$(dirname "$TMP_ROOT")"
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{"beam_width":[14,16],"node_budget_per_root":[384,512]}'
 export SPIRECOMM_TEACHER_SWEEP_ROUND1_GRID_JSON='{"beam_width":[14,16],"node_budget_per_root":[384,512]}'
 
-"$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+"$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
   --output-dir "$TMP_ROOT" \\
   --seed-start 1 --workers 1 --torch-threads 1 --blas-threads 1 \\
   --max-floor 3 --max-steps 300 \\

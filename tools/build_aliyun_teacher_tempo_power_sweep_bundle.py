@@ -26,11 +26,11 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_FILES = (
-    "build_v3_first_combat_snapshots.py",
-    "evaluate_v3_rollout_batch.py",
-    "run_v3_teacher_config_sweep.py",
-    "run_v3_teacher_config_sweep_fast.py",
-    "watch_teacher_sweep_progress.py",
+    "scripts/v3_combat/build_v3_first_combat_snapshots.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep_fast.py",
+    "scripts/v3_combat/watch_teacher_sweep_progress.py",
     "setup.py",
 )
 
@@ -196,7 +196,7 @@ mkdir -p "$ROOT/logs" "$ROOT/teacher_sweep_runs" "$OUT_DIR"
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{TEMPO_POWER_RANGES}'
 
 CMD=(
-  "$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py"
+  "$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py"
   --output-dir "$OUT_DIR"
   --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON"
   --seed-start 1
@@ -376,7 +376,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${OUT_DIR:-$ROOT/teacher_sweep_runs/v3_teacher_tempo_power_sweep_v1}"
 LOG_PATH="${LOG_PATH:-$ROOT/logs/v3_teacher_tempo_power_sweep_v1.log}"
 echo "== process =="
-pgrep -af "run_v3_teacher_config_sweep_fast.py.*$(basename "$OUT_DIR")" || true
+pgrep -af "scripts/v3_combat/run_v3_teacher_config_sweep_fast.py.*$(basename "$OUT_DIR")" || true
 echo
 echo "== latest log =="
 tail -80 "$LOG_PATH" 2>/dev/null || true
@@ -384,7 +384,7 @@ echo
 echo "== progress =="
 PY="${PY:-$ROOT/.venv/bin/python}"
 if [[ ! -x "$PY" ]]; then PY="${PYTHON:-python3}"; fi
-"$PY" "$ROOT/watch_teacher_sweep_progress.py" --output-dir "$OUT_DIR" --once --top 12 2>/dev/null || true
+"$PY" "$ROOT/scripts/v3_combat/watch_teacher_sweep_progress.py" --output-dir "$OUT_DIR" --once --top 12 2>/dev/null || true
 echo
 echo "== baseline =="
 "$PY" "$ROOT/scripts/summarize_tempo_power_sweep.py" --output-dir "$OUT_DIR" 2>/dev/null || true
@@ -420,7 +420,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 """
 
 
@@ -435,7 +435,7 @@ mkdir -p "$(dirname "$TMP_ROOT")"
 
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{TEMPO_POWER_RANGES}'
 
-"$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+"$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
   --output-dir "$TMP_ROOT" \\
   --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON" \\
   --seed-start 1 --workers 1 --torch-threads 1 --blas-threads 1 \\
@@ -508,7 +508,7 @@ export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{TEMPO_POWER_RANGES}'
 export SPIRECOMM_V3_TEACHER_CONTINUATION_ACTION_CAP="${{SPIRECOMM_V3_TEACHER_CONTINUATION_ACTION_CAP:-0}}"
 export SPIRECOMM_V3_TEACHER_CONTINUATION_ALWAYS_KEEP_END="${{SPIRECOMM_V3_TEACHER_CONTINUATION_ALWAYS_KEEP_END:-1}}"
 
-"$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+"$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
   --output-dir "$TMP_ROOT" \\
   --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON" \\
   --seed-start 1 --workers 1 --torch-threads 1 --blas-threads 1 \\
@@ -786,8 +786,8 @@ reduce search/evaluation budget.
 ```bash
 bash scripts/status.sh
 tail -f logs/v3_teacher_tempo_power_sweep_v1.log
-python watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_tempo_power_sweep_v1 --once --top 12
-python scripts/summarize_tempo_power_sweep.py --output-dir teacher_sweep_runs/v3_teacher_tempo_power_sweep_v1
+python3 scripts/v3_combat/watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_tempo_power_sweep_v1 --once --top 12
+python3 scripts/summarize_tempo_power_sweep.py --output-dir teacher_sweep_runs/v3_teacher_tempo_power_sweep_v1
 ```
 
 ## Search Plan

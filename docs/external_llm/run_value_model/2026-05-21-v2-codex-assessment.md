@@ -51,9 +51,9 @@ The best result is only about `1.04` MAE better than the floor-mean baseline. Re
 
 The next code work should be ordered as follows:
 
-1. Implement `analyze_run_value_dataset.py`.
+1. Implement `scripts/run_value/analyze_run_value_dataset.py`.
 2. Add diagnostics for grouped-oracle MAE, KNN-oracle MAE, seed/run/floor/phase/source balance, and before-vs-after distribution.
-3. Extend `train_run_value_model.py` cache records to include `sample_kind`, `source`, and optional chosen `state_after`.
+3. Extend `scripts/run_value/train_run_value_model.py` cache records to include `sample_kind`, `source`, and optional chosen `state_after`.
 4. Add row-weight modes for run-normalized phase/floor/source weighting.
 5. Add no-seed/no-raw-RNG encoder mode before retraining.
 6. Reproduce current best on A0, then run A1/A2/A3 ablations.

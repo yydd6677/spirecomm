@@ -26,7 +26,7 @@ if [[ ! -f "$CACHE_DIR/manifest.json" ]]; then
 fi
 
 if [[ -f models/run_value_v1/value_v2_aftermix_residual_aux_noseedrng/run_value_iter00.pt ]]; then
-  "$PY" evaluate_run_value_model.py \
+  "$PY" scripts/run_value/evaluate_run_value_model.py \
     --checkpoint models/run_value_v1/value_v2_aftermix_residual_aux_noseedrng/run_value_iter00.pt \
     --cache-dir "$CACHE_DIR" \
     --output analysis_outputs/run_value/value_v2_rebuilt_cache_eval.json \
@@ -37,7 +37,7 @@ fi
 
 OUT_DIR="models/run_value_v1/value_v7_noseed_beta2"
 mkdir -p "$OUT_DIR"
-"$PY" -u train_run_value_model.py \
+"$PY" -u scripts/run_value/train_run_value_model.py \
   --input-dir "$INPUT_DIR" \
   --cache-dir "$CACHE_DIR" \
   --output "$OUT_DIR/run_value_iter00.pt" \
@@ -80,7 +80,7 @@ mkdir -p "$OUT_DIR"
   --seed 67 \
   > "$LOG_DIR/value_v7_noseed_beta2.log" 2>&1
 
-"$PY" evaluate_run_value_model.py \
+"$PY" scripts/run_value/evaluate_run_value_model.py \
   --checkpoint "$OUT_DIR/run_value_iter00.pt" \
   --cache-dir "$CACHE_DIR" \
   --output analysis_outputs/run_value/value_v7_noseed_beta2_eval.json \

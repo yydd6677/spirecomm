@@ -148,16 +148,16 @@ Use explicit `v2` only when you are:
 
 The practical repo-default path is now:
 
-- `python run_native_run.py`
-- `python run_native_sim.py`
-- `python export_model_run_checklist.py --seed <seed>`
-- `python validate_real_game_first.py --native-backend v3 ...`
+- `python3 scripts/native/run_native_run.py`
+- `python3 scripts/native/run_native_sim.py`
+- `python3 scripts/native/export_model_run_checklist.py --seed <seed>`
+- `python3 scripts/native/validate_real_game_first.py --native-backend v3 ...`
 
 Explicit `v2` selection still exists for comparison and rollback:
 
-- `python run_native_run.py --backend v2`
-- `python run_native_sim.py --backend v2`
-- `python export_model_run_checklist.py --backend v2 --seed <seed>`
+- `python3 scripts/native/run_native_run.py --backend v2`
+- `python3 scripts/native/run_native_sim.py --backend v2`
+- `python3 scripts/native/export_model_run_checklist.py --backend v2 --seed <seed>`
 
 ## Lightweight Environment Notes
 
@@ -167,17 +167,17 @@ does not have every optional dependency installed.
 These native-only entrypoints now start directly without `torch` or
 lightspeed-specific Python modules:
 
-- `python run_native_run.py`
-- `python run_native_sim.py`
-- `python export_model_run_checklist.py --seed <seed>`
-- `python validate_real_game_first.py --mode native --native-backend v3 ...`
+- `python3 scripts/native/run_native_run.py`
+- `python3 scripts/native/run_native_sim.py`
+- `python3 scripts/native/export_model_run_checklist.py --seed <seed>`
+- `python3 scripts/native/validate_real_game_first.py --mode native --native-backend v3 ...`
 
 These comparison/model-validation entrypoints still require extra dependencies,
 but they now fail with short actionable messages instead of raw stack traces:
 
-- `python compare_native_to_lightspeed_run.py ...` requires `slaythespire`
-- `python maintain_alignment_failure_corpus.py ...` requires `slaythespire`
-- `python verify_model_integration.py ...` requires `torch` and, for
+- `python3 scripts/native/compare_native_to_lightspeed_run.py ...` requires `slaythespire`
+- `python3 scripts/native/maintain_alignment_failure_corpus.py ...` requires `slaythespire`
+- `python3 scripts/native/verify_model_integration.py ...` requires `torch` and, for
   lightspeed-backed checks, `slaythespire`
 
 ## Final Close-Out

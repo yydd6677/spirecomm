@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from export_model_run_checklist import _capture_run
+from scripts.native.export_model_run_checklist import _capture_run
 from spirecomm.ai.strict_trace import STRICT_TRACE_SCHEMA
 
 
@@ -35,9 +35,9 @@ class ExportModelRunChecklistTest(unittest.TestCase):
     def test_capture_run_stops_when_env_reaches_victory(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
-            with patch("export_model_run_checklist.build_runtime_selectors", return_value={}):
-                with patch("export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
-                    with patch("export_model_run_checklist.choose_modeled_action", return_value=({"kind": "map"}, [1.0], "map")):
+            with patch("scripts.native.export_model_run_checklist.build_runtime_selectors", return_value={}):
+                with patch("scripts.native.export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
+                    with patch("scripts.native.export_model_run_checklist.choose_modeled_action", return_value=({"kind": "map"}, [1.0], "map")):
                         trace = _capture_run(
                             seed=1,
                             ascension=0,
@@ -57,9 +57,9 @@ class ExportModelRunChecklistTest(unittest.TestCase):
     def test_capture_run_defaults_to_strict_trace_schema(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
-            with patch("export_model_run_checklist.build_runtime_selectors", return_value={}):
-                with patch("export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
-                    with patch("export_model_run_checklist.choose_modeled_action", return_value=({"kind": "map", "choice_index": 0, "symbol": "M"}, [1.0], "map")):
+            with patch("scripts.native.export_model_run_checklist.build_runtime_selectors", return_value={}):
+                with patch("scripts.native.export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
+                    with patch("scripts.native.export_model_run_checklist.choose_modeled_action", return_value=({"kind": "map", "choice_index": 0, "symbol": "M"}, [1.0], "map")):
                         trace = _capture_run(
                             seed=1,
                             ascension=0,
@@ -93,10 +93,10 @@ class ExportModelRunChecklistTest(unittest.TestCase):
         ]}
         with tempfile.TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
-            with patch("export_model_run_checklist.build_runtime_selectors", return_value=selectors):
-                with patch("export_model_run_checklist.validate_model_required_selectors", return_value=None):
-                    with patch("export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
-                        with patch("export_model_run_checklist.choose_model_required_action", return_value=({"kind": "map", "choice_index": 0, "symbol": "M"}, [1.0], "map")):
+            with patch("scripts.native.export_model_run_checklist.build_runtime_selectors", return_value=selectors):
+                with patch("scripts.native.export_model_run_checklist.validate_model_required_selectors", return_value=None):
+                    with patch("scripts.native.export_model_run_checklist._native_env_cls", return_value=_VictoryEnv):
+                        with patch("scripts.native.export_model_run_checklist.choose_model_required_action", return_value=({"kind": "map", "choice_index": 0, "symbol": "M"}, [1.0], "map")):
                             trace = _capture_run(
                                 seed=1,
                                 ascension=0,

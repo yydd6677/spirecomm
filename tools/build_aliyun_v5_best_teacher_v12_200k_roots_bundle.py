@@ -34,8 +34,8 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_FILES = (
-    "generate_v3_combat_teacher_dataset.py",
-    "run_native_run.py",
+    "scripts/v3_combat/generate_v3_combat_teacher_dataset.py",
+    "scripts/native/run_native_run.py",
     "setup.py",
     "README.md",
 )
@@ -151,7 +151,7 @@ echo "seedgen start out_dir=$OUT_DIR target_roots=$TARGET_ROOTS seeds=${SEED_STA
 echo "model=models/v3_combat_transformer_v5_18_epoch003_rollout_best.pt"
 echo "teacher_config=configs/teacher_v12_default.json"
 
-exec "$PY" -u "$ROOT/generate_v3_combat_teacher_dataset.py" \
+exec "$PY" -u "$ROOT/scripts/v3_combat/generate_v3_combat_teacher_dataset.py" \
   --source exploratory \
   --output-dir "$OUT_DIR" \
   "${APPEND_ARGS[@]}" \
@@ -254,7 +254,7 @@ if [[ -f "$PID_PATH" ]]; then
   fi
 fi
 sleep 2
-pgrep -f 'generate_v3_combat_teacher_dataset.py.*v5_best_teacher_v12_norandom_200k' | xargs -r kill 2>/dev/null || true
+pgrep -f 'scripts/v3_combat/generate_v3_combat_teacher_dataset.py.*v5_best_teacher_v12_norandom_200k' | xargs -r kill 2>/dev/null || true
 '''
 
 
@@ -353,7 +353,7 @@ def main() -> None:
     from spirecomm.native_sim_v3.content.characters import starting_profile
 
     required = [
-        "generate_v3_combat_teacher_dataset.py",
+        "scripts/v3_combat/generate_v3_combat_teacher_dataset.py",
         "models/v3_combat_transformer_v5_18_epoch003_rollout_best.pt",
         "models/card_reward.pt",
         "models/event_choice.pt",
@@ -478,7 +478,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 '''
 
 
@@ -541,7 +541,7 @@ The generator automatically adds `--append-output` if existing `shard_*.pt` file
 Check generated shards:
 
 ```bash
-python scripts/summarize_roots.py --output-dir data/v3_combat_teacher/v5_best_teacher_v12_norandom_200k
+python3 scripts/summarize_roots.py --output-dir data/v3_combat_teacher/v5_best_teacher_v12_norandom_200k
 ```
 
 Download after completion:

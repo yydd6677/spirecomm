@@ -27,11 +27,11 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_FILES = (
-    "build_v3_first_combat_snapshots.py",
-    "evaluate_v3_rollout_batch.py",
-    "run_v3_teacher_config_sweep.py",
-    "run_v3_teacher_config_sweep_fast.py",
-    "watch_teacher_sweep_progress.py",
+    "scripts/v3_combat/build_v3_first_combat_snapshots.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep_fast.py",
+    "scripts/v3_combat/watch_teacher_sweep_progress.py",
     "setup.py",
     "README.md",
     "LICENSE",
@@ -128,7 +128,7 @@ mkdir -p "$ROOT/logs" "$ROOT/teacher_sweep_runs" "$OUT_DIR"
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{POTION_RANGES}'
 
 CMD=(
-  "$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py"
+  "$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py"
   --output-dir "$OUT_DIR"
   --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON"
   --seed-start 1
@@ -228,7 +228,7 @@ def status_script() -> str:
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "== process =="
-pgrep -af 'run_v3_teacher_config_sweep_fast.py.*v3_teacher_potion_sweep_v1' || true
+pgrep -af 'scripts/v3_combat/run_v3_teacher_config_sweep_fast.py.*v3_teacher_potion_sweep_v1' || true
 echo
 echo "== latest log =="
 tail -80 "$ROOT/logs/v3_teacher_potion_sweep_v1.log" 2>/dev/null || true
@@ -236,7 +236,7 @@ echo
 echo "== progress =="
 PY="${PY:-$ROOT/.venv/bin/python}"
 if [[ ! -x "$PY" ]]; then PY="${PYTHON:-python3}"; fi
-"$PY" "$ROOT/watch_teacher_sweep_progress.py" --output-dir "$ROOT/teacher_sweep_runs/v3_teacher_potion_sweep_v1" --once --top 12 2>/dev/null || true
+"$PY" "$ROOT/scripts/v3_combat/watch_teacher_sweep_progress.py" --output-dir "$ROOT/teacher_sweep_runs/v3_teacher_potion_sweep_v1" --once --top 12 2>/dev/null || true
 echo
 echo "== baseline summary =="
 "$PY" "$ROOT/scripts/summarize_potion_sweep.py" --output-dir "$ROOT/teacher_sweep_runs/v3_teacher_potion_sweep_v1" 2>/dev/null || true
@@ -272,7 +272,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 '''
 
 
@@ -287,7 +287,7 @@ mkdir -p "$(dirname "$TMP_ROOT")"
 
 export SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON='{POTION_RANGES}'
 
-"$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+"$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
   --output-dir "$TMP_ROOT" \\
   --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON" \\
   --seed-start 1 --workers 1 --torch-threads 1 --blas-threads 1 \\
@@ -363,7 +363,7 @@ run_case() {{
   echo "== $name =="
   echo "case_dir=$case_dir"
   set +e
-  timeout -s TERM "$BENCH_TIMEOUT_SECONDS" "$PY" -u "$ROOT/run_v3_teacher_config_sweep_fast.py" \\
+  timeout -s TERM "$BENCH_TIMEOUT_SECONDS" "$PY" -u "$ROOT/scripts/v3_combat/run_v3_teacher_config_sweep_fast.py" \\
     --output-dir "$case_dir" \\
     --param-ranges-json "$SPIRECOMM_TEACHER_SWEEP_PARAM_RANGES_JSON" \\
     --seed-start 1 \\
@@ -604,8 +604,8 @@ FOREGROUND=1 WORKERS=$(nproc) bash scripts/run_potion_sweep.sh
 ```bash
 bash scripts/status.sh
 tail -f logs/v3_teacher_potion_sweep_v1.log
-python watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_potion_sweep_v1 --once --top 12
-python scripts/summarize_potion_sweep.py --output-dir teacher_sweep_runs/v3_teacher_potion_sweep_v1
+python3 scripts/v3_combat/watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_potion_sweep_v1 --once --top 12
+python3 scripts/summarize_potion_sweep.py --output-dir teacher_sweep_runs/v3_teacher_potion_sweep_v1
 ```
 
 The baseline is intentionally seed1-600. The summarizer prints both seed1-300 and seed1-600 baseline metrics.

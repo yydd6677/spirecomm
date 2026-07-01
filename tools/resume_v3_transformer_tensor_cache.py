@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from cache_v3_combat_transformer_dataset import (
+from scripts.v3_combat.cache_v3_combat_transformer_dataset import (
     CHUNKED_ROOT_TRANSFORMER_TENSOR_DATASET_SCHEMA,
     CHUNKED_TRANSFORMER_TENSOR_DATASET_SCHEMA,
     _cache_shard_chunk_worker,

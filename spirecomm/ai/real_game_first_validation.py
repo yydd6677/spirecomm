@@ -13,7 +13,7 @@ from random import Random
 from statistics import mean
 from typing import Any
 
-from export_model_run_checklist import _capture_run
+from scripts.native.export_model_run_checklist import _capture_run
 from spirecomm.ai.real_game_runner import run_seeded_real_game
 from spirecomm.ai.runtime_decision import (
     TRACE_POLICY_MODEL_REQUIRED,

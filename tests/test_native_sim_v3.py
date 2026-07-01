@@ -6,11 +6,11 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
-import compare_native_to_lightspeed_run
-import maintain_alignment_failure_corpus
-import run_native_sim
-import verify_model_integration
-from run_native_run import _native_env_cls as run_native_run_env_cls
+from scripts.native import compare_native_to_lightspeed_run
+from scripts.native import maintain_alignment_failure_corpus
+from scripts.native import run_native_sim
+from scripts.native import verify_model_integration
+from scripts.native.run_native_run import _native_env_cls as run_native_run_env_cls
 from spirecomm.ai.runtime_decision import build_runtime_selectors
 from spirecomm.native_sim_v2 import NativeRunEnv as V2NativeRunEnv
 from spirecomm.native_sim_v3 import NativeCombatEnv, NativeRunEnv
@@ -463,12 +463,12 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
     def test_runtime_entrypoints_default_to_v3_backend(self):
         repo_root = Path("/home/yydd/spirecomm")
         expected_snippets = {
-            repo_root / "run_native_run.py": 'default="v3"',
-            repo_root / "run_native_sim.py": 'default="v3"',
-            repo_root / "export_model_run_checklist.py": 'default="v3"',
-            repo_root / "maintain_alignment_failure_corpus.py": 'default="v3"',
-            repo_root / "compare_native_to_lightspeed_run.py": 'default="v3"',
-            repo_root / "verify_model_integration.py": 'default="lightspeed,v3"',
+            repo_root / "scripts/native/run_native_run.py": 'default="v3"',
+            repo_root / "scripts/native/run_native_sim.py": 'default="v3"',
+            repo_root / "scripts/native/export_model_run_checklist.py": 'default="v3"',
+            repo_root / "scripts/native/maintain_alignment_failure_corpus.py": 'default="v3"',
+            repo_root / "scripts/native/compare_native_to_lightspeed_run.py": 'default="v3"',
+            repo_root / "scripts/native/verify_model_integration.py": 'default="lightspeed,v3"',
         }
         for path, snippet in expected_snippets.items():
             self.assertIn(snippet, path.read_text(encoding="utf-8"), msg=f"expected v3 default in {path}")
@@ -476,12 +476,12 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
     def test_runtime_entrypoint_help_text_mentions_v3_default(self):
         repo_root = Path("/home/yydd/spirecomm")
         expected_snippets = {
-            repo_root / "run_native_run.py": "defaults to backend v3",
-            repo_root / "run_native_sim.py": "defaults to backend v3",
-            repo_root / "validate_real_game_first.py": "defaults to native backend v3",
-            repo_root / "export_model_run_checklist.py": "defaults to backend v3",
-            repo_root / "compare_native_to_lightspeed_run.py": "defaults to backend v3",
-            repo_root / "maintain_alignment_failure_corpus.py": "defaults to backend v3",
+            repo_root / "scripts/native/run_native_run.py": "defaults to backend v3",
+            repo_root / "scripts/native/run_native_sim.py": "defaults to backend v3",
+            repo_root / "scripts/native/validate_real_game_first.py": "defaults to native backend v3",
+            repo_root / "scripts/native/export_model_run_checklist.py": "defaults to backend v3",
+            repo_root / "scripts/native/compare_native_to_lightspeed_run.py": "defaults to backend v3",
+            repo_root / "scripts/native/maintain_alignment_failure_corpus.py": "defaults to backend v3",
         }
         for path, snippet in expected_snippets.items():
             self.assertIn(snippet, path.read_text(encoding="utf-8"), msg=f"expected v3 help text in {path}")
@@ -507,7 +507,7 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
 
     def test_run_native_sim_falls_back_to_heuristic_actions_without_torch(self):
         with patch(
-            "run_native_sim.SerializedCombatSelector",
+            "scripts.native.run_native_sim.SerializedCombatSelector",
             side_effect=ModuleNotFoundError("torch is required for model/training operations in spirecomm.ai"),
         ):
             result = run_native_sim.run_one(
@@ -524,7 +524,7 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
 
     def test_compare_native_to_lightspeed_reports_missing_lightspeed_dependency_cleanly(self):
         with patch(
-            "compare_native_to_lightspeed_run._load_lightspeed_runtime",
+            "scripts.native.compare_native_to_lightspeed_run._load_lightspeed_runtime",
             side_effect=ModuleNotFoundError(
                 "slaythespire is required for lightspeed/native comparison workflows. "
                 "Install the lightspeed Python package or use native-only entrypoints."
@@ -543,9 +543,9 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
         lightspeed_message = verify_model_integration._dependency_cli_message(
             ModuleNotFoundError("slaythespire is required for lightspeed-backed model integration checks.")
         )
-        self.assertIn("torch is required for verify_model_integration.py", torch_message)
+        self.assertIn("torch is required for scripts/native/verify_model_integration.py", torch_message)
         self.assertIn("native-only entrypoints", torch_message)
-        self.assertIn("torch is required for verify_model_integration.py", policy_torch_message)
+        self.assertIn("torch is required for scripts/native/verify_model_integration.py", policy_torch_message)
         self.assertIn("spirecomm-rl environment", policy_torch_message)
         self.assertIn("slaythespire is required for lightspeed-backed model integration checks", lightspeed_message)
 
@@ -553,7 +553,7 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
         message = maintain_alignment_failure_corpus._dependency_cli_message(
             ModuleNotFoundError("slaythespire is required for lightspeed/native comparison workflows.")
         )
-        self.assertIn("slaythespire is required for maintain_alignment_failure_corpus.py", message)
+        self.assertIn("slaythespire is required for scripts/native/maintain_alignment_failure_corpus.py", message)
         self.assertIn("native-only entrypoints", message)
 
     def test_native_sim_v3_namespace_docs_no_longer_claim_v2_is_default(self):
@@ -570,12 +570,12 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
         self.assertIn("For normal repo use, prefer `v3`.", text)
         self.assertIn("this `v3` rollout is complete", text)
         self.assertIn("use `v3` by default", text)
-        self.assertIn("validate_real_game_first.py --mode native --native-backend v3", text)
-        self.assertIn("compare_native_to_lightspeed_run.py ...` requires `slaythespire`", text)
+        self.assertIn("scripts/native/validate_real_game_first.py --mode native --native-backend v3", text)
+        self.assertIn("scripts/native/compare_native_to_lightspeed_run.py ...` requires `slaythespire`", text)
         self.assertIn("seed=20 / 135-step", text)
         self.assertIn("seed=6027341539762311745 / complete 78-step", text)
-        self.assertIn("python run_native_run.py", text)
-        self.assertIn("python run_native_run.py --backend v2", text)
+        self.assertIn("python3 scripts/native/run_native_run.py", text)
+        self.assertIn("python3 scripts/native/run_native_run.py --backend v2", text)
 
     def test_repo_readmes_point_to_v3_as_current_primary_backend(self):
         root_readme = Path("/home/yydd/spirecomm/README.md").read_text(encoding="utf-8")
@@ -583,7 +583,7 @@ class NativeSimV3IndependenceTest(unittest.TestCase):
         v3_readme = Path("/home/yydd/spirecomm/spirecomm/native_sim_v3/README.md").read_text(encoding="utf-8")
         self.assertIn("primary repo CLI entrypoints now default to `v3`", root_readme)
         self.assertIn("native_sim_v3/STATUS.md", root_readme)
-        self.assertIn("python run_native_run.py", root_readme)
+        self.assertIn("python3 scripts/native/run_native_run.py", root_readme)
         self.assertIn("lighter environments without `torch`", root_readme)
         self.assertIn("fail with short actionable messages", root_readme)
         self.assertIn("current", legacy_readme)

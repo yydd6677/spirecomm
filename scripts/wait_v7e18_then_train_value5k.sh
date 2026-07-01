@@ -40,7 +40,7 @@ MKL_NUM_THREADS=1 \
 OPENBLAS_NUM_THREADS=1 \
 NUMEXPR_NUM_THREADS=1 \
 PYTHONUNBUFFERED=1 \
-/home/yydd/miniforge3/envs/spirecomm-rl/bin/python -u train_run_value_model.py \
+/home/yydd/miniforge3/envs/spirecomm-rl/bin/python -u scripts/run_value/train_run_value_model.py \
   --input-dir data/run_value_v1/value_2k_baseline/iter00_rollout \
   --cache-dir data/run_value_v1/value_5k_baseline/tensor_cache_iter00 \
   --output models/run_value_v1/value_5k_baseline/run_value_iter00.pt \

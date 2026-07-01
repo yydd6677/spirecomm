@@ -32,7 +32,7 @@ eval_checkpoint() {
   local name="$1"
   local ckpt="$2"
   local output="$ANALYSIS_DIR/${name}_eval.json"
-  "$PY" evaluate_run_value_model.py \
+  "$PY" scripts/run_value/evaluate_run_value_model.py \
     --checkpoint "$ckpt" \
     --cache-dir "$CACHE_DIR" \
     --output "$output" \
@@ -62,7 +62,7 @@ train_variant() {
   shift
   local out_dir="models/run_value_v1/${name}"
   mkdir -p "$out_dir"
-  "$PY" -u train_run_value_model.py \
+  "$PY" -u scripts/run_value/train_run_value_model.py \
     --input-dir "$INPUT_DIR" \
     --cache-dir "$CACHE_DIR" \
     --output "$out_dir/run_value_iter00.pt" \

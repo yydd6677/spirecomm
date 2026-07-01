@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 import torch
 
 from spirecomm.ai.run_choice_model import EventChoiceSelector, RunChoicePolicyNetwork, option_token, save_run_choice_checkpoint
-from train_run_choice_models import build_pairs_from_run, campfire_candidates
+from scripts.model_training.train_run_choice_models import build_pairs_from_run, campfire_candidates
 
 
 class RunChoiceTrainingTest(unittest.TestCase):

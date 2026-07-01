@@ -27,9 +27,9 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_FILES = (
-    "build_v3_first_combat_snapshots.py",
-    "evaluate_v3_rollout_batch.py",
-    "run_native_run.py",
+    "scripts/v3_combat/build_v3_first_combat_snapshots.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/native/run_native_run.py",
     "setup.py",
     "README.md",
 )
@@ -139,7 +139,7 @@ RESULT_FLUSH_INTERVAL="${RESULT_FLUSH_INTERVAL:-16}"
 TASK_BATCH_SIZE="${TASK_BATCH_SIZE:-1}"
 mkdir -p "$ROOT/logs" "$ROOT/eval_runs"
 
-exec "$PY" -u "$ROOT/evaluate_v3_rollout_batch.py" \
+exec "$PY" -u "$ROOT/scripts/v3_combat/evaluate_v3_rollout_batch.py" \
   --output-dir "$OUT_DIR" \
   --seed-start "$SEED_START" \
   --count "$COUNT" \
@@ -204,13 +204,13 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
 
 rm -rf "$ROOT/_smoke_teacher_baseline" "$ROOT/_smoke_teacher_guard"
 WORKERS=1 SEED_START=1 COUNT=1 MAX_STEPS=300 \
-  "$PY" -u "$ROOT/evaluate_v3_rollout_batch.py" \
+  "$PY" -u "$ROOT/scripts/v3_combat/evaluate_v3_rollout_batch.py" \
   --output-dir "$ROOT/_smoke_teacher_baseline" \
   --seeds 1 --workers 1 --combat-selector v3-teacher \
   --teacher-config-path "$ROOT/configs/teacher_baseline.json" \
   --mean-floor-only --max-floor 1 --summary-interval 1 --result-flush-interval 1 --task-batch-size 1 --torch-threads 1
 WORKERS=1 SEED_START=1 COUNT=1 MAX_STEPS=300 \
-  "$PY" -u "$ROOT/evaluate_v3_rollout_batch.py" \
+  "$PY" -u "$ROOT/scripts/v3_combat/evaluate_v3_rollout_batch.py" \
   --output-dir "$ROOT/_smoke_teacher_guard" \
   --seeds 1 --workers 1 --combat-selector v3-teacher \
   --teacher-config-path "$ROOT/configs/teacher_guard.json" \
@@ -225,7 +225,7 @@ def status_script() -> str:
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "== processes =="
-pgrep -af 'evaluate_v3_rollout_batch.py.*teacher_v12_(baseline|guard)|run_one_eval.sh (baseline|guard)' || true
+pgrep -af 'scripts/v3_combat/evaluate_v3_rollout_batch.py.*teacher_v12_(baseline|guard)|run_one_eval.sh (baseline|guard)' || true
 echo
 for name in baseline guard; do
   echo "== $name log =="
@@ -255,7 +255,7 @@ for pidfile in "$ROOT"/logs/teacher_v12_*.pid; do
   fi
 done
 sleep 2
-pgrep -f 'evaluate_v3_rollout_batch.py.*teacher_v12_(baseline|guard)|run_one_eval.sh (baseline|guard)' | xargs -r kill 2>/dev/null || true
+pgrep -f 'scripts/v3_combat/evaluate_v3_rollout_batch.py.*teacher_v12_(baseline|guard)|run_one_eval.sh (baseline|guard)' | xargs -r kill 2>/dev/null || true
 '''
 
 
@@ -342,7 +342,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 '''
 
 
@@ -457,7 +457,7 @@ bash scripts/stop.sh
 Summarize:
 
 ```bash
-python scripts/summarize_pair.py
+python3 scripts/summarize_pair.py
 ```
 
 Download after completion:

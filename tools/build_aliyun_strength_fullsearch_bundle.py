@@ -26,10 +26,10 @@ MODEL_FILES = (
 )
 
 TOP_LEVEL_FILES = (
-    "evaluate_v3_rollout_batch.py",
-    "run_v3_teacher_config_sweep.py",
-    "run_v3_teacher_config_sweep_fast.py",
-    "watch_teacher_sweep_progress.py",
+    "scripts/v3_combat/evaluate_v3_rollout_batch.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep.py",
+    "scripts/v3_combat/run_v3_teacher_config_sweep_fast.py",
+    "scripts/v3_combat/watch_teacher_sweep_progress.py",
     "setup.py",
     "README.md",
     "LICENSE",
@@ -136,7 +136,7 @@ echo "python=$PYTHON"
 "$PYTHON" check_bundle.py
 
 CMD=(
-  "$PYTHON" -u run_v3_teacher_config_sweep_fast.py
+  "$PYTHON" -u scripts/v3_combat/run_v3_teacher_config_sweep_fast.py
   --output-dir "$OUT_DIR"
   --param-ranges-json "$PARAM_RANGE_JSON"
   --round1-grid-json "$STRENGTH_GRID"
@@ -272,7 +272,7 @@ python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python check_bundle.py
+python3 check_bundle.py
 '''
 
 
@@ -287,7 +287,7 @@ if [ ! -x "$PYTHON" ]; then
 fi
 OUT_DIR="${OUT_DIR:-teacher_sweep_runs/v3_teacher_strength_fullsearch_v2}"
 INTERVAL="${INTERVAL:-30}"
-"$PYTHON" watch_teacher_sweep_progress.py --output-dir "$OUT_DIR" --interval "$INTERVAL" "$@"
+"$PYTHON" scripts/v3_combat/watch_teacher_sweep_progress.py --output-dir "$OUT_DIR" --interval "$INTERVAL" "$@"
 '''
 
 
@@ -301,7 +301,7 @@ if [ -f logs/v3_teacher_strength_fullsearch_v2.pid ]; then
   pid="$(cat logs/v3_teacher_strength_fullsearch_v2.pid)"
   ps -p "$pid" -o pid,ppid,pgid,stat,%cpu,%mem,etime,cmd || true
 fi
-pgrep -af 'run_v3_teacher_config_sweep_fast.py.*v3_teacher_strength_fullsearch_v2' || true
+pgrep -af 'scripts/v3_combat/run_v3_teacher_config_sweep_fast.py.*v3_teacher_strength_fullsearch_v2' || true
 echo
 echo "== latest log =="
 tail -40 logs/v3_teacher_strength_fullsearch_v2.log 2>/dev/null || true
@@ -311,7 +311,7 @@ PYTHON="${PYTHON:-$ROOT/.venv/bin/python}"
 if [ ! -x "$PYTHON" ]; then
   PYTHON="${PYTHON_FALLBACK:-python3}"
 fi
-"$PYTHON" watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_strength_fullsearch_v2 --once --top 10 2>/dev/null || true
+"$PYTHON" scripts/v3_combat/watch_teacher_sweep_progress.py --output-dir teacher_sweep_runs/v3_teacher_strength_fullsearch_v2 --once --top 10 2>/dev/null || true
 '''
 
 

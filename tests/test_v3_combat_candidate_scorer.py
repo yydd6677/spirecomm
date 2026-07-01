@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from generate_v3_combat_teacher_dataset import collect_curated_potion_roots, curated_envs
+from scripts.v3_combat.generate_v3_combat_teacher_dataset import collect_curated_potion_roots, curated_envs
 from spirecomm.ai.torch_compat import torch
 from spirecomm.ai.v3_combat_dataset import (
     collate_labeled_roots,

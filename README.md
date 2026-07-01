@@ -71,7 +71,7 @@ Design choices in the first version:
 
 The training entrypoint is:
 
-`python train_combat_model.py --trajectory-dir trajectories --output models/combat_bc.pt --mode bc`
+`python3 scripts/model_training/train_combat_model.py --trajectory-dir trajectories --output models/combat_bc.pt --mode bc`
 
 Recommended first run:
 
@@ -91,7 +91,7 @@ For the first iteration, this is enough to produce a model that can auto-battle 
 
 ## Installing spirecomm:
 
-Run `python setup.py install` from the distribution root directory
+Run `python3 setup.py install` from the distribution root directory
 
 ## native_sim_v3
 
@@ -112,9 +112,9 @@ Current status:
 
 Recommended entrypoints:
 
-- `python run_native_run.py`
-- `python run_native_sim.py`
-- `python validate_real_game_first.py --native-backend v3 ...`
+- `python3 scripts/native/run_native_run.py`
+- `python3 scripts/native/run_native_sim.py`
+- `python3 scripts/native/validate_real_game_first.py --native-backend v3 ...`
 
 Comparison/model-validation helpers that still depend on `torch` or
 `slaythespire` now fail with short actionable messages instead of raw Python
