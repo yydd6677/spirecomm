@@ -3,8 +3,8 @@
 This document mainly describes the older native simulator family. The current
 primary backend status for the repo now lives under:
 
-- `/home/yydd/spirecomm/spirecomm/native_sim_v3/README.md`
-- `/home/yydd/spirecomm/spirecomm/native_sim_v3/STATUS.md`
+- [`../native_sim_v3/README.md`](../native_sim_v3/README.md)
+- [`../native_sim_v3/STATUS.md`](../native_sim_v3/STATUS.md)
 
 This package is a from-scratch simulator owned by `spirecomm`. It intentionally
 keeps the observation schema close to the CommunicationMod state format so the
@@ -78,7 +78,7 @@ Current implemented slice:
   related Ironclad/shop relics.
 - Existing spirecomm models can drive combat, card reward, map, campfire, shop,
   event, boss relic, potion, upgrade target, and purge target choices through
-  `/home/yydd/spirecomm/scripts/native/run_native_run.py`.
+  [`scripts/native/run_native_run.py`](../../scripts/native/run_native_run.py).
 - Randomness now uses a Python port of `sts_lightspeed`'s `sts::Random`, with
   separate run-level streams for Neow, treasure, event, relic, potion, card,
   merchant, monster, shuffle, misc, math-util, and map generation. This is the
